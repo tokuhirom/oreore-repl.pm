@@ -2,7 +2,8 @@ use inc::Module::Install;
 name 'OreOre-Tokuhirom-REPL';
 all_from 'lib/OreOre/Tokuhirom/REPL.pm';
 
-# requires '';
+requires 'Class::Component';
+requires 'FindBin::libs';
 
 tests 't/*.t t/*/*.t t/*/*/*.t t/*/*/*/*.t';
 test_requires 'Test::More';

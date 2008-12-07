@@ -3,6 +3,28 @@ use strict;
 use warnings;
 use 5.00800;
 our $VERSION = '0.01';
+use Class::Component;
+use Term::ReadLine;
+use Term::ANSIColor;
+__PACKAGE__->load_components(qw(
+    Plaggerize
+));
+
+sub run {
+    my $rl = Term::ReadLine->new('OreOre::REPL');
+    while (defined (local $_ = $rl->readline('repl>'))) {
+        next unless $_;
+        print eval $_;
+        print "\n";
+        if (my $e = $@) {
+            print STDERR color 'red bold';
+            print STDERR $e;
+            print STDERR color 'reset';
+        } else {
+            $rl->addhistory($_);
+        }
+    }
+}
 
 1;
 __END__
