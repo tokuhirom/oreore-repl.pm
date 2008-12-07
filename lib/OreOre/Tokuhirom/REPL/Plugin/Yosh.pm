@@ -3,16 +3,20 @@ use strict;
 use warnings;
 use base 'Class::Component::Plugin';
 use Time::HiRes qw/gettimeofday tv_interval/;
-my $t;
+my ($t1, $t2);
 
-sub before :Hook {
+sub before_eval :Hook {
     my ($self, $c) = @_;
-    $t = [gettimeofday()];
+    $t1 = [gettimeofday()];
 }
 
-sub after :Hook {
-     my $spent = tv_interval($t, [gettimeofday]);
-     print "spent time is $spent\n";
+sub after_eval :Hook {
+    $t2 = [gettimeofday()];
+}
+
+sub after_output :Hook {
+    my $spent = tv_interval($t1, $t2);
+    print "spent time is $spent\n";
 }
 
 1;

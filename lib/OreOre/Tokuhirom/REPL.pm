@@ -31,11 +31,14 @@ sub run {
             my $code = eval "package $PACKAGE;sub { $_; BEGIN { \$PACKAGE = __PACKAGE__ }}; ";
             die $@ if $@;
 
-            $c->run_hook('before');
+            $c->run_hook('before_eval');
             my $res = $code->();
-            $c->run_hook('after');
+            $c->run_hook('after_eval');
+
+            $c->run_hook('before_output');
             print Dumper($res) if $res;
             print "\n";
+            $c->run_hook('after_output');
 
             $rl->addhistory($_);
         };
