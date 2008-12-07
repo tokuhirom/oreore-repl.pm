@@ -28,10 +28,10 @@ sub run {
         }
 
         eval {
+            $c->run_hook('before_eval');
             my $code = eval "package $PACKAGE;sub { $_; BEGIN { \$PACKAGE = __PACKAGE__ }}; ";
             die $@ if $@;
 
-            $c->run_hook('before_eval');
             my $res = $code->();
             $c->run_hook('after_eval');
 
