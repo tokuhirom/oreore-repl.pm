@@ -20,8 +20,10 @@ sub run {
 
         if (my ($plugin) = ($_ =~ /^:load\s*(\S+)/)) {
             print "loading $plugin\n";
-            use UNIVERSAL::which;
-            $c->load_plugins($plugin);
+            eval {
+                $c->load_plugins($plugin);
+            };
+            error($@) if $@;
             next;
         }
 
@@ -37,12 +39,15 @@ sub run {
 
             $rl->addhistory($_);
         };
-        if (my $e = $@) {
-            print STDERR color 'red bold';
-            print STDERR $e;
-            print STDERR color 'reset';
-        }
+        error($@) if $@;
     }
+}
+
+sub error {
+    my $e = shift;
+    print STDERR color 'red bold';
+    print STDERR $e;
+    print STDERR color 'reset';
 }
 
 1;
