@@ -37,7 +37,7 @@ sub run_once {
         $c->load_plugins($plugin);
     } else {
         $c->run_hook('before_eval');
-        my $code = eval "package $PACKAGE;sub { $src; BEGIN { \$PACKAGE = __PACKAGE__ }}; ";
+        my $code = eval "package $PACKAGE;sub { $src; BEGIN { \$PACKAGE = __PACKAGE__ }}; "; ## no critic.
         die $@ if $@;
 
         my $res = $code->();
