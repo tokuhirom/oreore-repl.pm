@@ -7,42 +7,48 @@ use Term::ReadLine;
 use Term::ANSIColor;
 use Data::Dumper;
 use Class::Component;
+use Lexical::Persistence;
+use Class::Accessor::Lite;
 
 our $PACKAGE = 'main';
 
+Class::Accessor::Lite->mk_accessors(qw/rl/);
+
 sub run {
     my $class = shift;
-    my $c = $class->new;
-    my $rl = Term::ReadLine->new('OreOre::REPL');
+    my $c = $class->new({
+        rl => Term::ReadLine->new('OreOre::REPL'),
+    });
     my $counter = 1;
-    while (defined (local $_ = $rl->readline("repl($PACKAGE)> "))) {
+    while (defined (local $_ = $c->rl->readline("repl($PACKAGE)> "))) {
         next unless $_;
-
-        if (my ($plugin) = ($_ =~ /^:load\s*(\S+)/)) {
-            print "loading $plugin\n";
-            eval {
-                $c->load_plugins($plugin);
-            };
-            error($@) if $@;
-            next;
-        }
-
         eval {
-            $c->run_hook('before_eval');
-            my $code = eval "package $PACKAGE;sub { $_; BEGIN { \$PACKAGE = __PACKAGE__ }}; ";
-            die $@ if $@;
-
-            my $res = $code->();
-            $c->run_hook('after_eval');
-
-            $c->run_hook('before_output');
-            print Dumper($res) if $res;
-            print "\n";
-            $c->run_hook('after_output');
-
-            $rl->addhistory($_);
+            $class->run_once($c, $_);
         };
         error($@) if $@;
+    }
+}
+
+sub run_once {
+    my ($class, $c, $src) = @_;
+
+    if (my ($plugin) = ($src =~ /^:load\s*(\S+)/)) {
+        print "loading $plugin\n";
+        $c->load_plugins($plugin);
+    } else {
+        $c->run_hook('before_eval');
+        my $code = eval "package $PACKAGE;sub { $src; BEGIN { \$PACKAGE = __PACKAGE__ }}; ";
+        die $@ if $@;
+
+        my $res = $code->();
+        $c->run_hook('after_eval');
+
+        $c->run_hook('before_output');
+        print Dumper($res) if $res;
+        print "\n";
+        $c->run_hook('after_output');
+
+        $c->rl->addhistory($src);
     }
 }
 
