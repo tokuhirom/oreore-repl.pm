@@ -12,12 +12,13 @@ use Class::Accessor::Lite;
 
 our $PACKAGE = 'main';
 
-Class::Accessor::Lite->mk_accessors(qw/rl/);
+Class::Accessor::Lite->mk_accessors(qw/rl lex/);
 
 sub run {
     my $class = shift;
     my $c = $class->new({
         rl => Term::ReadLine->new('OreOre::REPL'),
+        lex => Lexical::Persistence->new(),
     });
     my $counter = 1;
     while (defined (local $_ = $c->rl->readline("repl($PACKAGE)> "))) {
@@ -37,10 +38,17 @@ sub run_once {
         $c->load_plugins($plugin);
     } else {
         $c->run_hook('before_eval');
-        my $code = eval "package $PACKAGE;sub { $src; BEGIN { \$PACKAGE = __PACKAGE__ }}; "; ## no critic.
+        ## no critic.
+        $src = join('',
+            "package $PACKAGE;",
+            map({ "my $_;\n" } keys %{$c->lex->get_context('_')}),
+            "sub { $src }",
+            ';BEGIN { $PACKAGE = __PACKAGE__ }'
+        );
+        my $code = eval $src;
         die $@ if $@;
 
-        my $res = $code->();
+        my $res = $c->lex->wrap($code)->();
         $c->run_hook('after_eval');
 
         $c->run_hook('before_output');

@@ -5,6 +5,7 @@ all_from 'lib/OreOre/Tokuhirom/REPL.pm';
 requires 'Class::Component';
 requires 'FindBin::libs';
 requires 'Class::Accessor::Lite';
+requires 'Lexical::Persistence';
 
 tests 't/*.t t/*/*.t t/*/*/*.t t/*/*/*/*.t';
 test_requires 'Test::More';
