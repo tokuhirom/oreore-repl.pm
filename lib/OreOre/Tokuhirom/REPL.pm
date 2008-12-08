@@ -24,6 +24,7 @@ sub run {
         dumper => 'OreOre::Tokuhirom::REPL::Dumper::DataDumper',
     });
     my $counter = 1;
+    $class->show_banner();
     while (defined (local $_ = $c->rl->readline("repl($PACKAGE)> "))) {
         next unless $_;
         eval {
@@ -31,6 +32,14 @@ sub run {
         };
         error($@) if $@;
     }
+}
+
+sub show_banner {
+    print color 'green';
+    print "$0 version $VERSION\n";
+    print "type :help for display help message\n";
+    print color 'reset';
+    print "\n";
 }
 
 sub run_once {
@@ -87,6 +96,18 @@ sub cmd_dumper {
     my $klass = "OreOre::Tokuhirom::REPL::Dumper::$dumper";
     $klass->use or die $@;
     $c->dumper($klass);
+}
+
+sub cmd_help {
+    print <<'...';
+*switch dumper module
+    :dumper DataDumper
+    :dumper JSON
+    :dumper YAML
+*loading plugins
+    :load Memory
+    :load Yosh
+...
 }
 
 1;
