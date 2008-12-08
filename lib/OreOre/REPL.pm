@@ -55,13 +55,13 @@ sub run_once {
     } else {
         $c->run_hook('before_eval');
         ## no critic.
-        $src = join('',
+        my $compiled = join('',
             "package $PACKAGE;",
             map({ "my $_;\n" } keys %{$c->lex->get_context('_')}),
             "sub { $src }",
             ';BEGIN { $PACKAGE = __PACKAGE__ }'
         );
-        my $code = eval $src;
+        my $code = eval $compiled;
         die $@ if $@;
 
         my @res = $c->lex->wrap($code)->();
@@ -71,8 +71,6 @@ sub run_once {
         print $c->dumper->dump(@res) if @res;
         print "\n";
         $c->run_hook('after_output');
-
-        $c->rl->addhistory($src);
     }
 }
 
