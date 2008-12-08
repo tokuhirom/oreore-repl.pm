@@ -7,6 +7,8 @@ requires 'FindBin::libs';
 requires 'Class::Accessor::Lite';
 requires 'Lexical::Persistence';
 
+install_script 'oreore-repl.pl';
+
 tests 't/*.t t/*/*.t t/*/*/*.t t/*/*/*/*.t';
 test_requires 'Test::More';
 test_requires 'YAML';
