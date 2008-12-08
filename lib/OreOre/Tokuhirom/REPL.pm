@@ -9,16 +9,19 @@ use Data::Dumper;
 use Class::Component;
 use Lexical::Persistence;
 use Class::Accessor::Lite;
+use OreOre::Tokuhirom::REPL::Dumper::DataDumper; # default dumper
+use UNIVERSAL::require;
 
 our $PACKAGE = 'main';
 
-Class::Accessor::Lite->mk_accessors(qw/rl lex/);
+Class::Accessor::Lite->mk_accessors(qw/rl lex dumper/);
 
 sub run {
     my $class = shift;
     my $c = $class->new({
         rl => Term::ReadLine->new('OreOre::REPL'),
         lex => Lexical::Persistence->new(),
+        dumper => 'OreOre::Tokuhirom::REPL::Dumper::DataDumper',
     });
     my $counter = 1;
     while (defined (local $_ = $c->rl->readline("repl($PACKAGE)> "))) {
@@ -52,11 +55,11 @@ sub run_once {
         my $code = eval $src;
         die $@ if $@;
 
-        my $res = $c->lex->wrap($code)->();
+        my @res = $c->lex->wrap($code)->();
         $c->run_hook('after_eval');
 
         $c->run_hook('before_output');
-        print Dumper($res) if $res;
+        print $c->dumper->dump(@res) if @res;
         print "\n";
         $c->run_hook('after_output');
 
@@ -76,6 +79,14 @@ sub cmd_load {
     print "loading $plugin\n";
     $plugin =~ s/;$//;
     $c->load_plugins($plugin);
+}
+
+sub cmd_dumper {
+    my ($c, $dumper) = @_;
+    print "dumper switch to $dumper\n";
+    my $klass = "OreOre::Tokuhirom::REPL::Dumper::$dumper";
+    $klass->use or die $@;
+    $c->dumper($klass);
 }
 
 1;
