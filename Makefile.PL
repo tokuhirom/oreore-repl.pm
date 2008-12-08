@@ -1,6 +1,6 @@
 use inc::Module::Install;
-name 'OreOre-Tokuhirom-REPL';
-all_from 'lib/OreOre/Tokuhirom/REPL.pm';
+name 'OreOre-REPL';
+all_from 'lib/OreOre/REPL.pm';
 
 requires 'Class::Component' => 0.17;
 requires 'FindBin::libs';
