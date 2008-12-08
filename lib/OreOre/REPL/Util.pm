@@ -1,4 +1,4 @@
-package OreOre::Tokuhirom::REPL::Util;
+package OreOre::REPL::Util;
 use strict;
 use warnings;
 use Exporter 'import';

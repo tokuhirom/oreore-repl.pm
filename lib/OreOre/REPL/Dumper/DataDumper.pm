@@ -1,4 +1,4 @@
-package OreOre::Tokuhirom::REPL::Dumper::DataDumper;
+package OreOre::REPL::Dumper::DataDumper;
 use strict;
 use warnings;
 use Data::Dumper;

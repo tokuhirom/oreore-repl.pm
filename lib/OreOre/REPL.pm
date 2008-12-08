@@ -1,4 +1,4 @@
-package OreOre::Tokuhirom::REPL;
+package OreOre::REPL;
 use strict;
 use warnings;
 use 5.00800;
@@ -9,7 +9,7 @@ use Data::Dumper;
 use Class::Component;
 use Lexical::Persistence;
 use Class::Accessor::Lite;
-use OreOre::Tokuhirom::REPL::Dumper::DataDumper; # default dumper
+use OreOre::REPL::Dumper::DataDumper; # default dumper
 use UNIVERSAL::require;
 
 our $PACKAGE = 'main';
@@ -21,7 +21,7 @@ sub run {
     my $c = $class->new({
         rl => Term::ReadLine->new('OreOre::REPL'),
         lex => Lexical::Persistence->new(),
-        dumper => 'OreOre::Tokuhirom::REPL::Dumper::DataDumper',
+        dumper => 'OreOre::REPL::Dumper::DataDumper',
     });
     my $counter = 1;
     $class->show_banner();
@@ -93,7 +93,7 @@ sub cmd_load {
 sub cmd_dumper {
     my ($c, $dumper) = @_;
     print "dumper switch to $dumper\n";
-    my $klass = "OreOre::Tokuhirom::REPL::Dumper::$dumper";
+    my $klass = "OreOre::REPL::Dumper::$dumper";
     $klass->use or die $@;
     $c->dumper($klass);
 }

@@ -1,4 +1,4 @@
-package OreOre::Tokuhirom::REPL::Dumper::YAML;
+package OreOre::REPL::Dumper::YAML;
 use strict;
 use warnings;
 use YAML ();

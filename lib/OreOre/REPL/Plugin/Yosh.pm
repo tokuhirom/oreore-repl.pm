@@ -1,4 +1,4 @@
-package OreOre::Tokuhirom::REPL::Plugin::Yosh;
+package OreOre::REPL::Plugin::Yosh;
 use strict;
 use warnings;
 use base 'Class::Component::Plugin';

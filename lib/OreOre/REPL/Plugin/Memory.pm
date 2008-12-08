@@ -1,8 +1,8 @@
-package OreOre::Tokuhirom::REPL::Plugin::Memory;
+package OreOre::REPL::Plugin::Memory;
 use strict;
 use warnings;
 use base 'Class::Component::Plugin';
-use OreOre::Tokuhirom::REPL::Util;
+use OreOre::REPL::Util;
 use GTop;
 my ($s1, $s2);
 my $gtop = GTop->new();

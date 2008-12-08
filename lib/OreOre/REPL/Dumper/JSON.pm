@@ -1,4 +1,4 @@
-package OreOre::Tokuhirom::REPL::Dumper::JSON;
+package OreOre::REPL::Dumper::JSON;
 use strict;
 use warnings;
 use JSON ();
