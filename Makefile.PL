@@ -2,10 +2,11 @@ use inc::Module::Install;
 name 'OreOre-Tokuhirom-REPL';
 all_from 'lib/OreOre/Tokuhirom/REPL.pm';
 
-requires 'Class::Component';
+requires 'Class::Component' => 0.17;
 requires 'FindBin::libs';
 requires 'Class::Accessor::Lite';
 requires 'Lexical::Persistence';
+requires 'UNIVERSAL::require' => 0.11;
 
 install_script 'oreore-repl.pl';
 
