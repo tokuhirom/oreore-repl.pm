@@ -33,10 +33,13 @@ sub run {
 sub run_once {
     my ($class, $c, $src) = @_;
 
-    if (my ($plugin) = ($src =~ /^:load\s*(\S+)/)) {
-        print "loading $plugin\n";
-        $plugin =~ s/;$//;
-        $c->load_plugins($plugin);
+    if (my ($cmd, $args) = ($src =~ /^:([a-z]+)(?:\s+(\S+))?$/)) {
+        my $meth = "cmd_$cmd";
+        if ($c->can($meth)) {
+            $c->$meth($args);
+        } else {
+            error("unknown command: $cmd\n");
+        }
     } else {
         $c->run_hook('before_eval');
         ## no critic.
@@ -66,6 +69,13 @@ sub error {
     print STDERR color 'red bold';
     print STDERR $e;
     print STDERR color 'reset';
+}
+
+sub cmd_load {
+    my ($c, $plugin) = @_;
+    print "loading $plugin\n";
+    $plugin =~ s/;$//;
+    $c->load_plugins($plugin);
 }
 
 1;
