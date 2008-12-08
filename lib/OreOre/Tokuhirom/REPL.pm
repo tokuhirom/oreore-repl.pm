@@ -35,6 +35,7 @@ sub run_once {
 
     if (my ($plugin) = ($src =~ /^:load\s*(\S+)/)) {
         print "loading $plugin\n";
+        $plugin =~ s/;//$;
         $c->load_plugins($plugin);
     } else {
         $c->run_hook('before_eval');
