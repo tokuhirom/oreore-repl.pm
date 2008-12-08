@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use FindBin::libs;
-use OreOre::Tokuhirom::REPL;
+use OreOre::REPL;
 
-OreOre::Tokuhirom::REPL->run();
+OreOre::REPL->run();
 
