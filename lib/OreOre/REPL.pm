@@ -45,9 +45,9 @@ sub show_banner {
 sub run_once {
     my ($class, $c, $src) = @_;
 
-    if (my ($args) = ($src =~ /^\?\s*(.+)$/)) {
+    if (my ($a) = ($src =~ /^\?\s*(.+)$/)) {
         # help
-        $c->run_help($args);
+        $c->run_help($a);
     } elsif (my ($cmd, $args) = ($src =~ /^:([a-z]+)(?:\s+(\S+))?$/)) {
         # run builtin command
         my $meth = "cmd_$cmd";
