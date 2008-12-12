@@ -11,10 +11,11 @@ use Lexical::Persistence;
 use Class::Accessor::Lite;
 use OreOre::REPL::Dumper::DataDumper; # default dumper
 use UNIVERSAL::require;
+use OreOre::REPL::Command;
 
 our $PACKAGE = 'main';
 
-Class::Accessor::Lite->mk_accessors(qw/rl lex dumper/);
+Class::Accessor::Lite->mk_accessors(qw/rl lex dumper log/);
 
 sub run {
     my $class = shift;
@@ -22,6 +23,7 @@ sub run {
         rl => Term::ReadLine->new('OreOre::REPL'),
         lex => Lexical::Persistence->new(),
         dumper => 'OreOre::REPL::Dumper::DataDumper',
+        log => [],
     });
     my $counter = 1;
     $class->show_banner();
@@ -51,8 +53,8 @@ sub run_once {
     } elsif (my ($cmd, $args) = ($src =~ /^:([a-z]+)(?:\s+(\S+))?$/)) {
         # run builtin command
         my $meth = "cmd_$cmd";
-        if ($c->can($meth)) {
-            $c->$meth($args);
+        if (my $cv = OreOre::REPL::Command->can($meth)) {
+            $cv->($c, $args);
         } else {
             error("unknown command: $cmd\n");
         }
@@ -72,9 +74,15 @@ sub run_once {
         $c->run_hook('after_eval');
 
         $c->run_hook('before_output');
-        print $c->dumper->dump(@res) if @res;
+        my $dumped = '';
+        if (@res) {
+            $dumped = $c->dumper->dump(@res);
+            print $dumped;
+        }
         print "\n";
         $c->run_hook('after_output');
+
+        push @{ $c->{log} }, { src => $src, 'dumped' => $dumped, package => $PACKAGE};
     }
 }
 
@@ -83,35 +91,6 @@ sub error {
     print STDERR color 'red bold';
     print STDERR $e;
     print STDERR color 'reset';
-}
-
-sub cmd_load {
-    my ($c, $plugin) = @_;
-    print "loading $plugin\n";
-    $plugin =~ s/;$//;
-    $c->load_plugins($plugin);
-}
-
-sub cmd_dumper {
-    my ($c, $dumper) = @_;
-    print "dumper switch to $dumper\n";
-    my $klass = "OreOre::REPL::Dumper::$dumper";
-    $klass->use or die $@;
-    $c->dumper($klass);
-}
-
-sub cmd_help {
-    print <<'...';
-*switch dumper module
-    :dumper DataDumper
-    :dumper JSON
-    :dumper YAML
-*loading plugins
-    :load Memory
-    :load Yosh
-*more help
-    ? Digest::MD5
-...
 }
 
 my %perlfuncs = 

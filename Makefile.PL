@@ -7,6 +7,7 @@ requires 'FindBin::libs';
 requires 'Class::Accessor::Lite';
 requires 'Lexical::Persistence';
 requires 'UNIVERSAL::require' => 0.11;
+requires 'App::NoPaste';
 
 install_script 'oreore-repl.pl';
 
