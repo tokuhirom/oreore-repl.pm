@@ -29,6 +29,11 @@ sub cmd_help {
     :load Yosh
 *more help
     ? Digest::MD5
+*send to NoPaste
+    :nopaste    # send past  1 line
+    :nopaste 10 # send past 10 lines
+*reload modules
+    :reload
 ...
 }
 
