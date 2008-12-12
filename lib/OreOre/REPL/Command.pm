@@ -58,4 +58,10 @@ sub cmd_nopaste {
     }
 }
 
+sub cmd_reload {
+    require Module::Reload;
+    Module::Reload->check;
+    print "module reloaded\n";
+}
+
 1;
