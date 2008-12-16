@@ -59,7 +59,7 @@ sub run_once {
             error("unknown command: $cmd\n");
         }
     } else {
-        $c->run_hook('before_eval');
+        $c->run_hook('before_eval', $src);
         ## no critic.
         my $compiled = join('',
             "package $PACKAGE;",
@@ -80,7 +80,7 @@ sub run_once {
             print $dumped;
         }
         print "\n";
-        $c->run_hook('after_output');
+        $c->run_hook('after_output', $src);
 
         push @{ $c->{log} }, { src => $src, 'dumped' => $dumped, package => $PACKAGE};
     }
