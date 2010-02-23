@@ -1,21 +1,20 @@
 package OreOre::REPL;
 use strict;
 use warnings;
+use base qw/Class::Accessor::Fast/;
 use 5.00800;
 our $VERSION = '0.01';
 use Term::ReadLine;
 use Term::ANSIColor;
 use Data::Dumper;
-use Class::Component;
 use Lexical::Persistence;
-use Class::Accessor::Lite;
 use OreOre::REPL::Dumper::DataDumper; # default dumper
 use UNIVERSAL::require;
 use OreOre::REPL::Command;
 
 our $PACKAGE = 'main';
 
-Class::Accessor::Lite->mk_accessors(qw/rl lex dumper log/);
+__PACKAGE__->mk_accessors(qw/rl lex dumper log/);
 
 sub run {
     my $class = shift;

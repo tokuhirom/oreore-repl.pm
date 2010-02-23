@@ -2,12 +2,9 @@ use inc::Module::Install;
 name 'OreOre-REPL';
 all_from 'lib/OreOre/REPL.pm';
 
-requires 'Class::Component' => 0.17;
 requires 'FindBin::libs';
-requires 'Class::Accessor::Lite';
 requires 'Lexical::Persistence';
 requires 'UNIVERSAL::require' => 0.11;
-requires 'App::Nopaste';
 requires 'Module::Reload';
 
 install_script 'oreore-repl.pl';
