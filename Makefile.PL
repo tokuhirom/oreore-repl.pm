@@ -2,7 +2,6 @@ use inc::Module::Install;
 name 'OreOre-REPL';
 all_from 'lib/OreOre/REPL.pm';
 
-requires 'FindBin::libs';
 requires 'Lexical::Persistence';
 requires 'UNIVERSAL::require' => 0.11;
 requires 'Module::Reload';
