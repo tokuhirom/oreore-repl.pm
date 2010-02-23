@@ -7,7 +7,7 @@ use B::Concise;
 sub after_output :Hook {
     my ($self, $c, $src) = @_;
 
-    my $code = eval "no warnings 'redefine'; sub { $src }";
+    my $code = eval "no warnings 'redefine'; sub { $src }"; ## no critic
     die $@ if $@;
     my $walker = B::Concise::compile('-exec', $code);
     $walker->();
