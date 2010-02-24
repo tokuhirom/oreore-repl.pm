@@ -58,7 +58,6 @@ sub run_once {
             error("unknown command: $cmd\n");
         }
     } else {
-        $c->run_hook('before_eval', $src);
         ## no critic.
         my $compiled = join('',
             "package $PACKAGE;",
@@ -70,16 +69,13 @@ sub run_once {
         die $@ if $@;
 
         my @res = $c->lex->wrap($code)->();
-        $c->run_hook('after_eval');
 
-        $c->run_hook('before_output');
         my $dumped = '';
         if (@res) {
             $dumped = $c->dumper->dump(@res);
             print $dumped;
         }
         print "\n";
-        $c->run_hook('after_output', $src);
 
         push @{ $c->{log} }, { src => $src, 'dumped' => $dumped, package => $PACKAGE};
     }
